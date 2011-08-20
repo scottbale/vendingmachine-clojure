@@ -28,5 +28,14 @@
   (- (reduce + coins) purchase-price))
 
 (defn make-change [change-due, coins]
-  [NICKEL]
-  )
+  (let [sorted (reverse (sort coins))]
+    (do-make-change change-due sorted)))
+
+(defn do-make-change [change-due, coins]
+  (if (and (not-empty coins) (> change-due 0)) 
+  (let [coin (first coins)
+        rest (rest coins)]
+    (if (>= change-due coin)
+      (cons coin (do-make-change (- change-due coin) rest))
+      (do-make-change change-due rest)))
+  []))
