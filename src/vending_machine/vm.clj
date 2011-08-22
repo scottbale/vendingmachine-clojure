@@ -4,13 +4,12 @@
 (def DIME 10)
 (def QUARTER 25)
 
-(defn coin-return [] (list NICKEL DIME))
-
-(defn purchase [purchase-price, deposits, reserve]
-  "Indicate true/false if purchase succeeded, given the int (cents) purchase
-   price, sequence of deposited coins, and sequence of available reserve
-   coins."
-
+(defn purchase 
+  "Given a purchase-price (cents), a sequence of deposited coins, and
+   a sequence of reserve coins in the vending machine, return a map
+   indicating success/failure, change (if applicable), and remaining
+   reserve."
+  [purchase-price, deposits, reserve]
   (cond (sufficient-funds purchase-price deposits)
         (let [change (change-due purchase-price deposits)
               reserve-plus-deposited (concat deposits reserve)
@@ -21,7 +20,9 @@
         :else {:success false :reserve reserve}
         ))
 
-(defn sufficient-funds [purchase-price, coins]
+(defn sufficient-funds
+  "Are there sufficient funds for the purchase?"
+  [purchase-price, coins] 
   (<= purchase-price (reduce + coins)))
 
 (defn change-due [purchase-price, coins]
