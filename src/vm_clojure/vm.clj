@@ -1,8 +1,29 @@
-(ns vending-machine.vm)
+(ns vm-clojure.core)
 
 (def NICKEL 5)
 (def DIME 10)
 (def QUARTER 25)
+
+(defn do-make-change [change-due, coins]
+  (if (and (not-empty coins) (> change-due 0)) 
+  (let [coin (first coins)
+        rest (rest coins)]
+    (if (>= change-due coin)
+      (cons coin (do-make-change (- change-due coin) rest))
+      (do-make-change change-due rest)))
+  []))
+
+(defn make-change [change-due, coins]
+  (let [sorted (reverse (sort coins))]
+    (do-make-change change-due sorted)))
+
+(defn change-due [purchase-price, coins]
+  (- (reduce + coins) purchase-price))
+
+(defn sufficient-funds
+  "Are there sufficient funds for the purchase?"
+  [purchase-price, coins] 
+  (<= purchase-price (reduce + coins)))
 
 (defn purchase 
   "Given a purchase-price (cents), a sequence of deposited coins, and
@@ -19,24 +40,3 @@
           )
         :else {:success false :reserve reserve}
         ))
-
-(defn sufficient-funds
-  "Are there sufficient funds for the purchase?"
-  [purchase-price, coins] 
-  (<= purchase-price (reduce + coins)))
-
-(defn change-due [purchase-price, coins]
-  (- (reduce + coins) purchase-price))
-
-(defn make-change [change-due, coins]
-  (let [sorted (reverse (sort coins))]
-    (do-make-change change-due sorted)))
-
-(defn do-make-change [change-due, coins]
-  (if (and (not-empty coins) (> change-due 0)) 
-  (let [coin (first coins)
-        rest (rest coins)]
-    (if (>= change-due coin)
-      (cons coin (do-make-change (- change-due coin) rest))
-      (do-make-change change-due rest)))
-  []))
