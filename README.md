@@ -12,9 +12,9 @@ Launch repl with project in classpath, i.e:
 
 `java -cp clojure.jar:vending-machine/src clojure.main`
 
-The load in repl, i.e:
+Then load in repl, i.e:
 
-`(use vending-machine.vm)`
+`(use 'vm-clojure.vm)`
 
 and
 

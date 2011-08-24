@@ -25,6 +25,21 @@
   [purchase-price, coins] 
   (<= purchase-price (reduce + coins)))
 
+(defn rm-one
+  "Remove at most one of 'x' from the collection."
+  [x coll]
+  (let [[head & rest] coll]
+    (if (= x head)
+      rest
+      (cons head (rm-one x rest)))))
+
+(defn rm-these
+  "Remove at most one of each of the x's from the collection."
+  [xs coll]
+  (if (empty? xs)
+    coll
+    (rm-these (rest xs) (rm-one (first xs) coll))))
+
 (defn purchase 
   "Given a purchase-price (cents), a sequence of deposited coins, and
    a sequence of reserve coins in the vending machine, return a map
@@ -35,7 +50,7 @@
         (let [change (change-due purchase-price deposits)
               reserve-plus-deposited (concat deposits reserve)
               change-coins (make-change change reserve-plus-deposited)
-              new-reserve (remove #(some #{%} change-coins) reserve-plus-deposited)]
+              new-reserve (rm-these change-coins reserve-plus-deposited)]
           {:success true :change change-coins :reserve new-reserve}
           )
         :else {:success false :reserve reserve}
