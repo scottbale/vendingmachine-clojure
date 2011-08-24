@@ -1,4 +1,4 @@
-(ns vm-clojure.core)
+(ns vm-clojure.vm)
 
 (def NICKEL 5)
 (def DIME 10)
